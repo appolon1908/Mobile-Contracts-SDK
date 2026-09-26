@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Codestra Mobile Control API
+  version: 0.1.0
+paths:
+  /v1/health:
+    get:
+      operationId: health
+      responses:
+        '200': {description: Healthy}
+  /v1/devices:
+    get:
+      operationId: listDevices
+      responses:
+        '200': {description: Devices}
+    post:
+      operationId: registerDevice
+      responses:
+        '201': {description: Registered}
+  /v1/devices/{device_id}:
+    get:
+      operationId: getDevice
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '200': {description: Device}
+  /v1/devices/{device_id}/heartbeat:
+    post:
+      operationId: heartbeat
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '202': {description: Accepted}
+  /v1/devices/{device_id}/commands:
+    get:
+      operationId: pollCommands
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '200': {description: Pending commands}
+    post:
+      operationId: createCommand
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '202': {description: Queued}
+  /v1/devices/{device_id}/commands/{command_id}/result:
+    post:
+      operationId: commandResult
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+        - {name: command_id, in: path, required: true, schema: {type: string}}
+      responses:
+        '202': {description: Recorded}
+  /v1/devices/{device_id}/policies:
+    get:
+      operationId: getEffectivePolicy
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '200': {description: Effective policy}
+    put:
+      operationId: setDevicePolicy
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '200': {description: Updated}
+  /v1/devices/{device_id}/sync/contacts:
+    post:
+      operationId: syncContacts
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '202': {description: Sync queued}
+  /v1/devices/{device_id}/sync/media:
+    post:
+      operationId: syncMedia
+      parameters:
+        - {$ref: '#/components/parameters/DeviceId'}
+      responses:
+        '202': {description: Sync queued}
+  /v1/gateway/capabilities:
+    get:
+      operationId: gatewayCapabilities
+      responses:
+        '200': {description: Capabilities}
+  /v1/gateway/commands:
+    post:
+      operationId: dispatchGatewayCommand
+      responses:
+        '202': {description: Accepted}
+  /v1/audit/events:
+    get:
+      operationId: listAuditEvents
+      responses:
+        '200': {description: Audit events}
+components:
+  parameters:
+    DeviceId:
+      name: device_id
+      in: path
+      required: true
+      schema: {type: string}
